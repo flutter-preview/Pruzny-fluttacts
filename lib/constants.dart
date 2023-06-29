@@ -30,3 +30,9 @@ const phoneStyle = TextStyle(
   fontSize: 14.0,
   fontWeight: FontWeight.normal,
 );
+
+const formValueStyle = TextStyle(
+  color: secondaryColor,
+  fontSize: 16.0,
+  fontWeight: FontWeight.normal,
+);

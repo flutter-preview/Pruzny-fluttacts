@@ -1,3 +1,4 @@
+import 'package:fluttacts/pages/creation.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -22,7 +23,12 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // Open add contact page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreationPage(),
+                ),
+              );
             },
           ),
           IconButton(
