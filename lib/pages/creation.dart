@@ -1,4 +1,6 @@
+import 'package:fluttacts/model/contact.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
@@ -11,24 +13,40 @@ class CreationPage extends StatefulWidget {
 }
 
 class _CreationPageState extends State<CreationPage> {
-  static final dateFormat = DateFormat('dd/MM/yyyy');
+  static final dateFormat = DateFormat("dd/MM/yyyy");
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _birthController = TextEditingController();
+  final Box _contactsBox = Hive.box("contacts");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Adicionar contato',
+          "Adicionar contato",
           style: appBarTextStyle,
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add contact
+          debugPrint("Saving contact");
+          Contact(
+            name: _nameController.text,
+            phone: _phoneController.text,
+            email: _emailController.text,
+            birthday: _birthController.text == "" ? null : _birthController.text,
+          );
+          _contactsBox.add(
+            Contact(
+              name: _nameController.text,
+              phone: _phoneController.text,
+              email: _emailController.text,
+              birthday: _birthController.text == "" ? null : _birthController.text,
+            ).toMap(),
+          );
+          Navigator.pop(context);
         },
         backgroundColor: iconBackgroundColor,
         tooltip: "Salvar",
@@ -43,13 +61,15 @@ class _CreationPageState extends State<CreationPage> {
         child: Container(
           color: backgroundColor,
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              createForm(label: "Nome", controller: _nameController, icon: Icons.person),
-              createForm(label: "Número", controller: _phoneController, icon: Icons.phone),
-              createForm(label: "Email", controller: _emailController, icon: Icons.email),
-              createDateSelection(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                createForm(label: "Nome", controller: _nameController, icon: Icons.person),
+                createForm(label: "Número", controller: _phoneController, icon: Icons.phone),
+                createForm(label: "Email", controller: _emailController, icon: Icons.email),
+                createDateSelection(),
+              ],
+            ),
           ),
         ),
       ),
@@ -110,7 +130,7 @@ class _CreationPageState extends State<CreationPage> {
     required TextEditingController controller,
     required IconData icon,
     String Function(String?)? validator,
-    bool readOnly = true,
+    bool readOnly = false,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),

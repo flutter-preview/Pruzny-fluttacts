@@ -1,5 +1,7 @@
+import 'package:fluttacts/model/contact.dart';
 import 'package:fluttacts/pages/creation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../constants.dart';
 
@@ -28,7 +30,7 @@ class _HomeState extends State<Home> {
                 MaterialPageRoute(
                   builder: (context) => const CreationPage(),
                 ),
-              );
+              ).then((value) => setState(() {}));
             },
           ),
           IconButton(
@@ -39,36 +41,18 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
-      body: listContacts(),
+      body: listContacts()
     );
   }
 
   Widget listContacts() {
-    List contacts = [
-      'Contact 1 a',
-      'Contact 2 b',
-      'Contact 3 c',
-      'Contact 4 d',
-      'Contact 5 e',
-      'Contact 6 f',
-      'Contact 7 g',
-      'Contact 8 h',
-      'Contact 9 i',
-      'Contact 10 j',
-    ];
+    final box = Hive.box("contacts");
+    final values = box.values.toList();
+    List<Contact> contacts = [];
 
-    List numbers = [
-      '123456789',
-      '223456789',
-      '323456789',
-      '423456789',
-      '523456789',
-      '623456789',
-      '723456789',
-      '823456789',
-      '923456789',
-      '023456789',
-    ];
+    values.toList().forEach((element) {
+      contacts.add(Contact.fromMap(element));
+    });
 
     if (contacts.isEmpty) {
       return const Center(
@@ -82,6 +66,7 @@ class _HomeState extends State<Home> {
     return ListView.separated(
       itemCount: contacts.length,
       itemBuilder: (context, index) {
+        Contact contact = contacts[index];
         return ListTile(
           leading: Container(
             decoration: const BoxDecoration(
@@ -93,11 +78,11 @@ class _HomeState extends State<Home> {
             child: const Icon(Icons.person)
           ),
           title: Text(
-            contacts[index],
+            contact.name,
             style: nameStyle,
           ),
           subtitle: Text(
-            numbers[index],
+            contact.phone,
             style: phoneStyle,
           ),
           onTap: () {
