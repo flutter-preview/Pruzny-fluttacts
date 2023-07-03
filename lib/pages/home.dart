@@ -48,14 +48,10 @@ class _HomeState extends State<Home> {
 
   Widget listContacts() {
     final box = Hive.box("contacts");
+    final keys = box.keys.toList();
     final values = box.values.toList();
-    List<Contact> contacts = [];
 
-    values.toList().forEach((element) {
-      contacts.add(Contact.fromMap(element));
-    });
-
-    if (contacts.isEmpty) {
+    if (values.isEmpty) {
       return const Center(
         child: Text(
           'No contacts found',
@@ -65,9 +61,9 @@ class _HomeState extends State<Home> {
     }
 
     return ListView.separated(
-      itemCount: contacts.length,
+      itemCount: values.length,
       itemBuilder: (context, index) {
-        Contact contact = contacts[index];
+        Contact contact = Contact.fromMap(values[index]);
         return ListTile(
           leading: Container(
             decoration: const BoxDecoration(
@@ -90,7 +86,7 @@ class _HomeState extends State<Home> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ContactDetailsPage(contact: contact),
+                builder: (context) => ContactDetailsPage(contactKey: keys[index]),
               ),
             ).then((value) => setState(() {}));
           },

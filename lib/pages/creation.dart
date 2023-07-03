@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 import '../constants.dart';
 
 class CreationPage extends StatefulWidget {
-  const CreationPage({super.key});
+  const CreationPage({super.key, this.contactKey});
+
+  final int? contactKey;
 
   @override
   State<CreationPage> createState() => _CreationPageState();
@@ -19,33 +21,52 @@ class _CreationPageState extends State<CreationPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _birthController = TextEditingController();
   final Box _contactsBox = Hive.box("contacts");
+  DateTime _initialDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+    final Contact? contact = widget.contactKey != null
+      ? Contact.fromMap(_contactsBox.get(widget.contactKey))
+      : null;
+    if (contact != null) {
+      _nameController.text = contact.name;
+      _phoneController.text = contact.phone;
+      _emailController.text = contact.email;
+      if (contact.birthday != null) {
+        _birthController.text = contact.birthday!;
+        _initialDate = dateFormat.parse(contact.birthday!);
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Adicionar contato",
+        title: Text(
+          "${contact != null ? "Editar" : "Adicionar"} contato",
           style: appBarTextStyle,
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          debugPrint("Saving contact");
-          Contact(
-            name: _nameController.text,
-            phone: _phoneController.text,
-            email: _emailController.text,
-            birthday: _birthController.text == "" ? null : _birthController.text,
-          );
-          _contactsBox.add(
-            Contact(
-              name: _nameController.text,
-              phone: _phoneController.text,
-              email: _emailController.text,
-              birthday: _birthController.text == "" ? null : _birthController.text,
-            ).toMap(),
-          );
+          if (widget.contactKey != null && contact != null) {
+            contact.name = _nameController.text;
+            contact.phone = _phoneController.text;
+            contact.email = _emailController.text;
+            contact.birthday = _birthController.text == "" ? null : _birthController.text;
+            _contactsBox.putAt(
+              widget.contactKey!,
+              contact.toMap(),
+            );
+          }
+          else {
+            _contactsBox.add(
+              Contact(
+                name: _nameController.text,
+                phone: _phoneController.text,
+                email: _emailController.text,
+                birthday: _birthController.text == "" ? null : _birthController.text,
+              ).toMap(),
+            );
+          }
           Navigator.pop(context);
         },
         backgroundColor: iconBackgroundColor,
@@ -104,7 +125,7 @@ class _CreationPageState extends State<CreationPage> {
                   onPressed: () async {
                     DateTime? date = await showDatePicker(
                       context: context,
-                      initialDate: DateTime.now(),
+                      initialDate: _initialDate,
                       firstDate: DateTime(1900),
                       lastDate: DateTime.now(),
                     );

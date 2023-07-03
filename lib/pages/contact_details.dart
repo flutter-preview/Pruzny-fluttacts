@@ -2,20 +2,25 @@ import 'package:fluttacts/constants.dart';
 import 'package:fluttacts/model/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'creation.dart';
 
 class ContactDetailsPage extends StatefulWidget {
-  const ContactDetailsPage({super.key, required this.contact});
+  const ContactDetailsPage({super.key, required this.contactKey});
 
-  final Contact contact;
+  final int? contactKey;
 
   @override
   State<ContactDetailsPage> createState() => _ContactDetailsPageState();
 }
 
 class _ContactDetailsPageState extends State<ContactDetailsPage> {
+  final _contactsBox = Hive.box("contacts");
+
   @override
   Widget build(BuildContext context) {
-    Contact contact = widget.contact;
+    Contact contact = Contact.fromMap(_contactsBox.get(widget.contactKey));
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +32,12 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              // Open edit page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreationPage(contactKey: widget.contactKey),
+                ),
+              ).then((value) => setState(() {}));
             },
           ),
           IconButton(
