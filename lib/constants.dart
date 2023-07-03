@@ -6,6 +6,7 @@ const secondaryColor = Color(0xffeeeeee);
 const backgroundColor = Color(0xff1c2130);
 const iconBackgroundColor = Color(0xff576CBC);
 const dividerColor = Color(0xff666666);
+const darkGray = Color(0xff3A3B3C);
 
 const appBarTextStyle = TextStyle(
   color: secondaryColor,

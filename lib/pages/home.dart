@@ -1,6 +1,7 @@
 import 'package:fluttacts/model/contact.dart';
 import 'package:fluttacts/pages/contact_details.dart';
 import 'package:fluttacts/pages/creation.dart';
+import 'package:fluttacts/pages/search.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -19,7 +20,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Fluttact',
+          "Fluttact",
           style: appBarTextStyle,
         ),
         actions: [
@@ -37,7 +38,12 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              // Open search page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SearchPage(),
+                ),
+              ).then((value) => setState(() {}));
             },
           )
         ],
