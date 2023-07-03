@@ -18,6 +18,12 @@ const defaultTextStyle = TextStyle(
   fontSize: 18.0,
   fontWeight: FontWeight.normal,
 );
+
+const boldNameStyle = TextStyle(
+  color: primaryColor,
+  fontSize: 28.0,
+  fontWeight: FontWeight.bold,
+);
   
 const nameStyle = TextStyle(
   color: primaryColor,
@@ -25,9 +31,15 @@ const nameStyle = TextStyle(
   fontWeight: FontWeight.normal,
 );
 
-const phoneStyle = TextStyle(
+const subtitleStyle = TextStyle(
   color: secondaryColor,
   fontSize: 14.0,
+  fontWeight: FontWeight.normal,
+);
+
+const infoStyle = TextStyle(
+  color: secondaryColor,
+  fontSize: 18.0,
   fontWeight: FontWeight.normal,
 );
 

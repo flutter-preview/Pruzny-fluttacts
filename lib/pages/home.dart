@@ -1,4 +1,5 @@
 import 'package:fluttacts/model/contact.dart';
+import 'package:fluttacts/pages/contact_details.dart';
 import 'package:fluttacts/pages/creation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -83,10 +84,15 @@ class _HomeState extends State<Home> {
           ),
           subtitle: Text(
             contact.phone,
-            style: phoneStyle,
+            style: subtitleStyle,
           ),
           onTap: () {
-            // Open contact details
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ContactDetailsPage(contact: contact),
+              ),
+            ).then((value) => setState(() {}));
           },
         );
       },
