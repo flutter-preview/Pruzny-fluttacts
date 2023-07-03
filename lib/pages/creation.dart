@@ -38,48 +38,47 @@ class _CreationPageState extends State<CreationPage> {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "${contact != null ? "Editar" : "Adicionar"} contato",
-          style: appBarTextStyle,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "${contact != null ? "Editar" : "Adicionar"} contato",
+            style: appBarTextStyle,
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (widget.contactKey != null && contact != null) {
-            contact.name = _nameController.text;
-            contact.phone = _phoneController.text;
-            contact.email = _emailController.text;
-            contact.birthday = _birthController.text == "" ? null : _birthController.text;
-            _contactsBox.putAt(
-              widget.contactKey!,
-              contact.toMap(),
-            );
-          }
-          else {
-            _contactsBox.add(
-              Contact(
-                name: _nameController.text,
-                phone: _phoneController.text,
-                email: _emailController.text,
-                birthday: _birthController.text == "" ? null : _birthController.text,
-              ).toMap(),
-            );
-          }
-          Navigator.pop(context);
-        },
-        backgroundColor: iconBackgroundColor,
-        tooltip: "Salvar",
-        child: const Icon(
-          Icons.save,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            if (widget.contactKey != null && contact != null) {
+              contact.name = _nameController.text;
+              contact.phone = _phoneController.text;
+              contact.email = _emailController.text;
+              contact.birthday = _birthController.text == "" ? null : _birthController.text;
+              _contactsBox.putAt(
+                widget.contactKey!,
+                contact.toMap(),
+              ).then((value) => Navigator.pop(context));
+            }
+            else {
+              _contactsBox.add(
+                Contact(
+                  name: _nameController.text,
+                  phone: _phoneController.text,
+                  email: _emailController.text,
+                  birthday: _birthController.text == "" ? null : _birthController.text,
+                ).toMap(),
+              ).then((value) => Navigator.pop(context));
+            }
+          },
+          backgroundColor: iconBackgroundColor,
+          tooltip: "Salvar",
+          child: const Icon(
+            Icons.save,
+          ),
         ),
-      ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Container(
+        body: Container(
           color: backgroundColor,
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
